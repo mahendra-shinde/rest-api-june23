@@ -1,0 +1,53 @@
+<!DOCTYPE html>
+<html>
+<head>
+<meta charset="ISO-8859-1">
+<title>Simple CLIENT !</title>
+
+
+</head>
+<body>
+<h2> Simple REST Client using JavaScript !!</h2>
+
+
+	Enter product id: <input id="productId" type=text width="10" />
+	<button  onclick="search()">Search</button> 
+
+
+<div id="success">
+Product ID : <span id="pid" ></span><br/>
+Name : <span id="pname" ></span><br/>
+Price : <span id="price" ></span> <br/>
+</div>
+<div id="error" style="color:red">
+
+</div>
+</body>
+<script>
+function search(){
+	productId = document.getElementById("productId");
+	req = new XMLHttpRequest(); //AJAX (Asynchronous Javascript and XML)
+	
+	req.onreadystatechange = function() {
+		if(this.readyState == 4 ){ // Once processing request is completed and server has returned SOME response
+			if(this.status == 200){ //IF response is SUCCESS / 200
+				data = req.responseText; //Get data as JSON-STRING
+				pd = JSON.parse(data);	//Convert it into JSON Object
+				document.getElementById("pid").innerHTML = pd.productId;
+				document.getElementById("pname").innerHTML = pd.productName;
+				document.getElementById("price").innerHTML = pd.price;
+				document.getElementById('error').style.display = 'none';
+				document.getElementById('success').style.display = 'block';
+			}
+			else{
+				document.getElementById('success').style.display = 'none';
+				document.getElementById('error').style.display = 'block';
+				document.getElementById('error').innerHTML = req.responseText;
+			}
+		}
+	}
+	req.open('GET','http://localhost:8080/11-demo/api/products/'+productId.value);
+	req.send();
+}	
+</script>
+</html>
